@@ -198,3 +198,7 @@ u }
 	text-align: center;
 
 }
+
+.right-image img {
+	right: 0px;
+}

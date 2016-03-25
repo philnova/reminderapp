@@ -2,10 +2,15 @@ import flask
 import flask.ext.sqlalchemy
 from celery import Celery
 from views.appointment import AppointmentResourceDelete, AppointmentFormResource
-from views.appointment import AppointmentResourceCreate, AppointmentResourceIndex
+from views.appointment import AppointmentResourceCreate, AppointmentResourceIndex, AppointmentResourceEdit, AppointmentFormResourceEdit
 from views.appointment import Splash, Login, ShowLogin, UserEdit, UserFormEdit, DeleteUser, LogoutAjax, DeleteUserForm
 from flask import session as login_session
 import json
+
+# todos
+## add edit function to appointments
+## check that CRUD functions check login status
+## documentation on github
 
 
 class Route(object):
@@ -23,6 +28,8 @@ handlers = [
     Route('/appointment', 'appointment.create', AppointmentResourceCreate),
     Route('/appointment/<int:id>/delete',
           'appointment.delete', AppointmentResourceDelete),
+    Route('/appointment/<int:id>/modify', 'appointment.modify', AppointmentResourceEdit),
+    Route('/appointment/<int:id>/edit', 'appointment.edit', AppointmentFormResourceEdit),
     Route('/appointment/new', 'appointment.new', AppointmentFormResource),
     Route('/user', 'user.edit', UserEdit),
     Route('/user/edit', 'user.form', UserFormEdit),

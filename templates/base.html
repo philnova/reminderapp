@@ -14,12 +14,18 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
+
         <nav class="navbar navbar-default">
+
             <div class="container">
+
                 <div class="row divider green">
+
         <div class="col-md-12"></div>
+
     </div>
         <div class="col-md-11 col-md-offset-1 padding-none">
+
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{{ url_for('appointment.index') }}">ForgetMeNot</a>
                 </div>
@@ -32,10 +38,13 @@
                                 New appointment
                             </a>
                         </li>
+
                         
                         <li>
                             <a href="{{ url_for('user.form') }}">Edit Profile</a>
                         </li>
+
+                        
 
                         <li>
                             <a href="{{ url_for('logout') }}">Logout
@@ -43,6 +52,8 @@
                         </li>
 
                     </ul>
+                    {% block image %} {% endblock %}
+                    
                 </div>
             <!--</div>-->
         </div>

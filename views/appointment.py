@@ -26,7 +26,7 @@ import requests
 # move logic for accessing user database to different file
 
 def createUser(login_session):
-    newUser = User(name=login_session['username'], google_id=login_session[
+    newUser = User(name=login_session['name'], google_id=login_session[
                    'google_id'], picture=login_session['picture'])
     reminders.db.session.add(newUser)
     reminders.db.session.commit()
@@ -73,11 +73,12 @@ class LogoutAjax(MethodView):
             revoke = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % reminders.login_session['access_token']
 
             reminders.login_session.clear()
-
+            flash('You have been logged out')
             return render_template('login/logout.html', revoke = revoke)
         except:
             print "No access token"
             reminders.login_session.clear()
+            flash('A server error occurred. Please log in again.')
             return redirect(url_for('splash'))
 
 class Logout(MethodView):
@@ -182,6 +183,8 @@ class Login(MethodView):
         print data
 
         reminders.login_session['google_id'] = data['id']
+        reminders.login_session['name'] = data['name']
+        reminders.login_session['picture'] = data['picture']
 
         # check if user is already in the database
         if getUserID(reminders.login_session['google_id']) is None:
@@ -202,7 +205,7 @@ class Login(MethodView):
         output += '<img src="'
         output += current_user.picture
         output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-        flash("you are now logged in as {0}".format(current_user.name))
+        flash("You are now logged in as {0}".format(current_user.name))
         print "done!"
         return output
 
@@ -213,7 +216,7 @@ class AppointmentResourceDelete(MethodView):
         appt = reminders.db.session.query(Appointment).filter_by(id=id).one()
         reminders.db.session.delete(appt)
         reminders.db.session.commit()
-
+        flash('Your appointment has been deleted')
         return redirect(url_for('appointment.index'), code=303)
 
 
@@ -221,10 +224,10 @@ class UserEdit(MethodView):
 
     def post(self):
         form = EditUserForm(request.form)
-
+        user = getUserInfo(reminders.login_session['user_id'])
         if form.validate():
 
-            user = getUserInfo(reminders.login_session['user_id'])
+            
             user.name = request.form['name']
             user.phone = request.form['phone_number']
             user.picture = request.form['image_link']
@@ -263,6 +266,7 @@ class DeleteUser(MethodView):
         del reminders.login_session['access_token'] 
         del reminders.login_session['google_id']
         del reminders.login_session['user_id']
+        flash('Your user account and appointments has been deleted.')
         return redirect(url_for('appointment.index'))
 
 
@@ -270,11 +274,44 @@ class DeleteUserForm(MethodView):
 
     def get(self):
         if reminders.login_session.get('user_id') is not None:
+            user = getUserInfo(reminders.login_session['user_id'])
             return render_template('user/delete.html')
         else:
             return redirect(url_for('splash'))
-        
 
+class AppointmentResourceEdit(MethodView):
+    def post(self, id):
+        form = NewAppointmentForm(request.form)
+
+        if form.validate():
+            appointment = reminders.db.session.query(Appointment).filter_by(id=id).one()
+            appointment.name = request.form['name']
+            appointment.reminder = request.form['reminder']
+            appointment.phone_number = request.form['phone_number']
+            appointment.delta = request.form['delta']
+            appointment.time = request.form['time']
+            appointment.timezone = request.form['timezone']
+
+            reminders.db.session.add(appointment)
+            reminders.db.session.commit()
+            flash('Your appointment has been updated!')
+            return redirect(url_for('appointment.index'), code=303)
+        else:
+            return render_template('appointments/edit.html', form=form), 400
+        
+class AppointmentFormResourceEdit(MethodView):
+
+    def get(self, id):
+        appointment = reminders.db.session.query(Appointment).filter_by(id=id).one()
+        form = NewAppointmentForm()
+        form.name.default = appointment.name
+        form.reminder.default = appointment.reminder
+        form.phone_number.default = appointment.phone_number
+        form.delta.default = appointment.delta
+        form.time.default = appointment.time
+        form.timezone.default = appointment.timezone
+        form.process()
+        return render_template('appointments/edit.html', form=form, appt_id=id)
 
 class AppointmentResourceCreate(MethodView):
 
@@ -303,8 +340,10 @@ class AppointmentResourceIndex(MethodView):
 
     def get(self):
         if reminders.login_session.get('user_id') is not None:
+            user = getUserInfo(reminders.login_session['user_id'])
             all_appointments = reminders.db.session.query(Appointment).filter_by(user_id = reminders.login_session['user_id'])
-            return render_template('appointments/index.html', appointments=all_appointments)
+            print user.picture
+            return render_template('appointments/index.html', appointments=all_appointments, picture=user.picture)
         else:
             return redirect(url_for('splash'))
 

@@ -1,11 +1,31 @@
-<html>
 
-	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script> <!--creates anonymous function that inserts script into DOM-->
-	</head>
-	<body>
-		<h1>Use your Google+ Account to Access ForgetMeNot</h1>
+
+
+
+
+
+<head>
+<title>Login</title>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="icon"
+              type="image/png"
+              href="{{ url_for('static', filename='favicon.ico')}}">
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script> <!--creates anonymous function that inserts script into DOM-->
+</head>
+
+<body>
+	<nav class="navbar navbar-default">
+            <div class="container">
+                <div class="row divider green">
+        <div class="col-md-12"> 
+        	</div> </div> 
+        	<h1>Login</h1> 
+    	
+		
+		<p>Use your Google+ Account to Access ForgetMeNot</p>
 		<div id="signinButton">
 			<!--openid is a type of permission that gives us access to username and email-->
 			<!--data-approvalprompt="force" forces the user to login every time. Useful for dev but annoying in production-->
@@ -19,7 +39,7 @@
 				data-approvalprompt="force">
 			</span>
 		</div>
-		<div id="result"></div>
+		
 
 		<script>
 		function signInCallback(authResult){
@@ -50,6 +70,7 @@
 			}
 		}
 		</script>
-
-	</body>
+<div id="result"></div>
+</div></nav>
+</body>
 </html>

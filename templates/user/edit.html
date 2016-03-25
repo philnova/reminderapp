@@ -5,6 +5,7 @@
 
 {% from "common/_fields.html" import render_field %}
 {% block content %}
+
   <form method="post" class="form-horizontal col-lg-5" action="{{ url_for('user.edit') }}">
     {{ form.csrf_token }}
     <div class="form-group">
@@ -13,12 +14,19 @@
       {{ render_field(form.image_link) }}
 
       <button type="submit" class="btn btn-default">Confirm</button>
+        <a href = "{{url_for('appointment.index')}}">
+                        <button class="btn btn-default delete">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel </button>
+                    </a>
     </div>
   </form>
+
+
 
 <form action="{{ url_for('user.confirmdelete' )}}">
     <button type="submit" class="btn btn-danger btn-xs">Delete Account</button>
 </form>
+
 
 {% endblock %}
 {% block scripts %}
