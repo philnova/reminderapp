@@ -3,7 +3,7 @@ import flask.ext.sqlalchemy
 from celery import Celery
 from views.appointment import AppointmentResourceDelete, AppointmentFormResource
 from views.appointment import AppointmentResourceCreate, AppointmentResourceIndex
-from views.appointment import Splash, Login, ShowLogin, Dashboard
+from views.appointment import Splash, Login, ShowLogin, UserEdit, UserFormEdit, DeleteUser, LogoutAjax, DeleteUserForm
 from flask import session as login_session
 import json
 
@@ -24,7 +24,11 @@ handlers = [
     Route('/appointment/<int:id>/delete',
           'appointment.delete', AppointmentResourceDelete),
     Route('/appointment/new', 'appointment.new', AppointmentFormResource),
-    Route('/dashboard', 'user.dashboard', Dashboard)
+    Route('/user', 'user.edit', UserEdit),
+    Route('/user/edit', 'user.form', UserFormEdit),
+    Route('/user/delete', 'user.delete', DeleteUser),
+    Route('/user/confirmdelete', 'user.confirmdelete', DeleteUserForm),
+    Route('/logout', 'logout', LogoutAjax)
 ]
 
 CLIENT_ID = json.loads(

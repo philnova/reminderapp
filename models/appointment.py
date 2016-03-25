@@ -39,7 +39,7 @@ class Appointment(Base):
     timezone = Column(String(50), nullable=False)
 
     #user = relationship(User)
-    user_id = Column(Integer, ForeignKey('User.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
 
 
     def __init__(self, name, reminder, phone_number, delta, time, timezone):

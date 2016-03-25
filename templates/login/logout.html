@@ -1,0 +1,25 @@
+<html>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>
+$.ajax({
+  type: 'GET',
+  url: "{{revoke}}",
+  async: false,
+  contentType: "application/json",
+  dataType: 'jsonp',
+  success: function(nullResponse) {
+    // Do something now that user is disconnected
+    // The response is always undefined.
+    window.location.href = "/splash";
+  },
+  error: function(e) {
+    // Handle the error
+    // console.log(e);
+    // You could point users to manually disconnect if unsuccessful
+    // https://plus.google.com/apps
+  }
+});
+</script>
+
+</html>
